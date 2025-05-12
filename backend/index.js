@@ -1,27 +1,34 @@
+// Load necessary packages
 import express from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
+
+// Import custom modules
 import connectDB from './config/db.js';
 import authRoutes from './routes/authRoutes.js';
+import taskRoutes from './routes/task.routes.js'; // ✅ NEW: Task route added
 
+dotenv.config(); // Load environment variables from .env
 
-dotenv.config();
 const app = express();
 
-// Middleware
-app.use(cors());
-app.use('/api/auth', authRoutes);
-app.use(express.json());
-
-// DB connect
+// Connect to MongoDB using Mongoose
 connectDB();
 
-// Basic route
+// Apply global middlewares
+app.use(cors());             // Allow requests from frontend domains (like Vercel)
+app.use(express.json());     // Parse JSON request bodies
+
+// Route definitions
+app.use('/api/auth', authRoutes);   // All authentication routes: /login, /signup
+app.use('/api/tasks', taskRoutes);  // ✅ All task routes: CRUD, filtering, etc.
+
+// Root route (for health check)
 app.get('/', (req, res) => {
   res.send('🚀 API is running...');
 });
 
-// Start server
+// Start Express server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`🚀 Server running on port ${PORT}`);
