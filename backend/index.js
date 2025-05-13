@@ -7,6 +7,9 @@ import cors from 'cors';
 import connectDB from './config/db.js';
 import authRoutes from './routes/authRoutes.js';
 import taskRoutes from './routes/task.routes.js'; // ✅ NEW: Task route added
+import auditRoutes from './routes/audit.routes.js';
+
+
 
 dotenv.config(); // Load environment variables from .env
 
@@ -22,6 +25,8 @@ app.use(express.json());     // Parse JSON request bodies
 // Route definitions
 app.use('/api/auth', authRoutes);   // All authentication routes: /login, /signup
 app.use('/api/tasks', taskRoutes);  // ✅ All task routes: CRUD, filtering, etc.
+
+app.use('/api/audit', auditRoutes);
 
 // Root route (for health check)
 app.get('/', (req, res) => {
