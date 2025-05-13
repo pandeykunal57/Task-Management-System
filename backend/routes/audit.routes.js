@@ -2,7 +2,7 @@
 
 import express from 'express';
 import AuditLog from '../models/auditLog.model.js';
-import { authenticateUser } from '../middlewares/authMiddleware.js';
+import { authenticateUser ,authorizeRoles } from '../middlewares/authMiddleware.js';
 
 const router = express.Router();
 
@@ -11,11 +11,12 @@ const router = express.Router();
  * @desc    Get all audit logs (protected - for admins or internal use)
  * @access  Private
  */
-router.get('/', authenticateUser, async (req, res) => {
+router.get('/', authenticateUser, authorizeRoles('admin'), async (req, res) => {
+  // admin-only access
   try {
     const logs = await AuditLog.find()
-      .populate('user', 'name email') // Optionally include user details
-      .sort({ createdAt: -1 }); // Newest logs first
+      .populate('user', 'name email')
+      .sort({ createdAt: -1 });
 
     res.status(200).json(logs);
   } catch (error) {
@@ -23,5 +24,4 @@ router.get('/', authenticateUser, async (req, res) => {
     res.status(500).json({ message: 'Internal server error' });
   }
 });
-
 export default router;
