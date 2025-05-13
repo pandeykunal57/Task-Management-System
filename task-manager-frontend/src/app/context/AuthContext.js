@@ -1,43 +1,42 @@
-// frontend/src/app/context/AuthContext.js
+"use client"; // ✅ Must be at the top for any file using hooks like useState or useEffect
 
-import { createContext, useContext, useEffect, useState } from 'react';
+import { createContext, useContext, useEffect, useState } from "react";
 
-// Create the context object to be shared across the app
-const AuthContext = createContext();
+// Create the context
+export const AuthContext = createContext(); // Make sure to export AuthContext
 
-// AuthProvider will wrap your entire app and provide user state to all components
+// AuthProvider to wrap the app and manage auth state
 export const AuthProvider = ({ children }) => {
-  const [authUser, setAuthUser] = useState(() => {
-    // Try to load user from localStorage on page refresh
-    const storedUser = localStorage.getItem('authUser');
-    return storedUser ? JSON.parse(storedUser) : null;
-  });
+  const [user, setUser] = useState(null); // Holds current user
+  const [loading, setLoading] = useState(true); // To prevent flicker on reload
 
-  // Sync user state to localStorage whenever it changes
+  // Simulate loading user data from localStorage on first mount
   useEffect(() => {
-    if (authUser) {
-      localStorage.setItem('authUser', JSON.stringify(authUser));
-    } else {
-      localStorage.removeItem('authUser');
+    const storedUser = localStorage.getItem("task_user");
+    if (storedUser) {
+      setUser(JSON.parse(storedUser)); // Parse the user from localStorage
     }
-  }, [authUser]);
+    setLoading(false); // Set loading to false once the check is done
+  }, []);
 
-  // Function to log user in and set the auth state
+  // Login function to store the user and update the context
   const login = (userData) => {
-    setAuthUser(userData); // Includes name, email, token, role, etc.
+    setUser(userData); // Set the user data to state
+    localStorage.setItem("task_user", JSON.stringify(userData)); // Save user data in localStorage
   };
 
-  // Function to clear auth state and log user out
+  // Logout function to clear the user and remove the data from localStorage
   const logout = () => {
-    setAuthUser(null);
+    setUser(null); // Clear the user data from state
+    localStorage.removeItem("task_user"); // Remove the user data from localStorage
   };
 
   return (
-    <AuthContext.Provider value={{ authUser, login, logout }}>
+    <AuthContext.Provider value={{ user, login, logout, loading }}>
       {children}
     </AuthContext.Provider>
   );
 };
 
-// Custom hook for using auth context anywhere in the app
+// Hook to use the auth context easily
 export const useAuth = () => useContext(AuthContext);
