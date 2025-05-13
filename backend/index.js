@@ -8,6 +8,10 @@ import connectDB from './config/db.js';
 import authRoutes from './routes/authRoutes.js';
 import taskRoutes from './routes/task.routes.js'; // ✅ NEW: Task route added
 import auditRoutes from './routes/audit.routes.js';
+import analyticsRoutes from './routes/analytics.routes.js';
+
+
+
 
 
 
@@ -27,6 +31,8 @@ app.use('/api/auth', authRoutes);   // All authentication routes: /login, /signu
 app.use('/api/tasks', taskRoutes);  // ✅ All task routes: CRUD, filtering, etc.
 
 app.use('/api/audit', auditRoutes);
+
+app.use('/api/analytics', analyticsRoutes);
 
 // Root route (for health check)
 app.get('/', (req, res) => {
