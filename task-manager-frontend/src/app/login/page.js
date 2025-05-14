@@ -18,28 +18,12 @@ export default function LoginPage() {
     e.preventDefault();
     setError("");
 
-    try {
-      const res = await fetch("/api/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
-      });
+    const result = await login(formData);
 
-      const data = await res.json();
-
-      if (!res.ok) {
-        setError(data.message || "Login failed");
-        return;
-      }
-
-      // ✅ Set auth context globally
-      login(data);
-
-      // Redirect to dashboard
+    if (result.success) {
       router.push("/dashboard");
-    } catch (err) {
-      console.error("Login error:", err);
-      setError("An unexpected error occurred.");
+    } else {
+      setError(result.message || "Login failed");
     }
   };
 

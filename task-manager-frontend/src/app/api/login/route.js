@@ -1,11 +1,13 @@
 export async function POST(req) {
   const body = await req.json();
 
-  // to  Simulate authentication
-  console.log("Login attempt", body);
-
   if (body.email === "test@example.com" && body.password === "123456") {
-    return new Response(JSON.stringify({ message: "Login successful!" }), {
+    const user = {
+      email: "test@example.com",
+      role: "admin", // 👈 this makes the user admin
+    };
+
+    return new Response(JSON.stringify({ message: "Login successful!", user }), {
       status: 200,
       headers: { "Content-Type": "application/json" },
     });

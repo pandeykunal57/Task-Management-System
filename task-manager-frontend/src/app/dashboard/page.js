@@ -5,7 +5,7 @@ import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '../context/AuthContext'; // ✅ use the hook, not context directly
 import ProtectedRoute from '../components/ProtectedRoute'; // ✅ wrap UI in auth guard
-import Header from "../components/Header"; // 👈 add this import
+
 
 
 

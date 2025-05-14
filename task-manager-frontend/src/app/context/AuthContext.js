@@ -1,34 +1,52 @@
-"use client"; // ✅ Must be at the top for any file using hooks like useState or useEffect
+"use client";
 
 import { createContext, useContext, useEffect, useState } from "react";
 
 // Create the context
-export const AuthContext = createContext(); // Make sure to export AuthContext
+export const AuthContext = createContext();
 
 // AuthProvider to wrap the app and manage auth state
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null); // Holds current user
-  const [loading, setLoading] = useState(true); // To prevent flicker on reload
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  // Simulate loading user data from localStorage on first mount
+  // Load user from localStorage on first mount
   useEffect(() => {
     const storedUser = localStorage.getItem("task_user");
     if (storedUser) {
-      setUser(JSON.parse(storedUser)); // Parse the user from localStorage
+      setUser(JSON.parse(storedUser));
     }
-    setLoading(false); // Set loading to false once the check is done
+    setLoading(false);
   }, []);
 
-  // Login function to store the user and update the context
-  const login = (userData) => {
-    setUser(userData); // Set the user data to state
-    localStorage.setItem("task_user", JSON.stringify(userData)); // Save user data in localStorage
+  // Updated login function: fetches from mock API and stores user
+  const login = async ({ email, password }) => {
+    try {
+      const res = await fetch("/api/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        setUser(data.user);
+        localStorage.setItem("task_user", JSON.stringify(data.user));
+        return { success: true };
+      } else {
+        return { success: false, message: data.message };
+      }
+    } catch (err) {
+      console.error("Login error:", err);
+      return { success: false, message: "Login failed" };
+    }
   };
 
-  // Logout function to clear the user and remove the data from localStorage
+  // Logout function
   const logout = () => {
-    setUser(null); // Clear the user data from state
-    localStorage.removeItem("task_user"); // Remove the user data from localStorage
+    setUser(null);
+    localStorage.removeItem("task_user");
   };
 
   return (
@@ -38,5 +56,5 @@ export const AuthProvider = ({ children }) => {
   );
 };
 
-// Hook to use the auth context easily
+// Hook to use the auth context
 export const useAuth = () => useContext(AuthContext);

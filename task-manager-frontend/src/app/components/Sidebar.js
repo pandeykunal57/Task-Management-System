@@ -12,7 +12,7 @@ export default function Sidebar() {
     { label: "Dashboard", href: "/dashboard" },
     { label: "Tasks", href: "/dashboard/tasks" },
     ...(user?.role === "admin"
-      ? [{ label: "Audit Logs", href: "/dashboard/logs" }]
+       ? [{ label: "Audit Logs", href: "/dashboard/auditlogs" }]
       : []),
   ];
 
