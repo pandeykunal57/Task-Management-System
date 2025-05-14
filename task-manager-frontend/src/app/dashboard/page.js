@@ -5,6 +5,10 @@ import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '../context/AuthContext'; // ✅ use the hook, not context directly
 import ProtectedRoute from '../components/ProtectedRoute'; // ✅ wrap UI in auth guard
+import Header from "../components/Header"; // 👈 add this import
+
+
+
 
 export default function DashboardPage() {
   const { user, loading } = useAuth();
@@ -20,6 +24,7 @@ export default function DashboardPage() {
 
   return (
     <ProtectedRoute>
+        
       <div className="min-h-screen p-6 bg-gray-100">
         <h1 className="text-3xl font-bold mb-4">Welcome to the Dashboard</h1>
         <p className="text-lg text-gray-700 mb-4">
