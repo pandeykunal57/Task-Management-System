@@ -26,9 +26,7 @@ e.preventDefault();
 setError('');
 setLoading(true);
 
-javascript
-Copy
-Edit
+
 try {
   const res = await fetch('http://localhost:5000/api/tasks', {
     method: 'POST',
@@ -67,9 +65,7 @@ return (
 <option value="high">High</option>
 </select>
 
-php-template
-Copy
-Edit
+
       {error && <p className="text-red-500 text-sm">{error}</p>}
 
       <button

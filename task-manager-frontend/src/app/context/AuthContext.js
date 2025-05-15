@@ -8,18 +8,23 @@ export const AuthContext = createContext();
 // AuthProvider to wrap the app and manage auth state
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
+  const [token, setToken] = useState(null);  // <-- store token separately
   const [loading, setLoading] = useState(true);
 
-  // Load user from localStorage on first mount
+  // Load user and token from localStorage on first mount
   useEffect(() => {
     const storedUser = localStorage.getItem("task_user");
+    const storedToken = localStorage.getItem("task_token");
     if (storedUser) {
       setUser(JSON.parse(storedUser));
+    }
+    if (storedToken) {
+      setToken(storedToken);
     }
     setLoading(false);
   }, []);
 
-  // Updated login function: fetches from mock API and stores user
+  // Updated login function: fetches from API and stores user + token
   const login = async ({ email, password }) => {
     try {
       const res = await fetch("/api/login", {
@@ -32,7 +37,9 @@ export const AuthProvider = ({ children }) => {
 
       if (res.ok) {
         setUser(data.user);
+        setToken(data.token);
         localStorage.setItem("task_user", JSON.stringify(data.user));
+        localStorage.setItem("task_token", data.token);
         return { success: true };
       } else {
         return { success: false, message: data.message };
@@ -43,18 +50,24 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // Logout function
+
+  // Logout function clears user and token from state and localStorage
   const logout = () => {
     setUser(null);
+    setToken(null);
     localStorage.removeItem("task_user");
+    localStorage.removeItem("task_token");
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, logout, loading }}>
+    <AuthContext.Provider value={{ user, token, login, logout, loading }}>
       {children}
     </AuthContext.Provider>
   );
 };
 
+
 // Hook to use the auth context
 export const useAuth = () => useContext(AuthContext);
+
+

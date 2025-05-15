@@ -3,8 +3,10 @@ import {
   registerUser,
   loginUser,
   getMe,
+  getAllUsers,
+  deleteUser,
 } from '../controllers/user.controller.js';
-import { authenticateUser } from '../middlewares/authMiddleware.js';
+import { authenticateUser, authorizeRoles } from '../middlewares/authMiddleware.js';
 
 const router = express.Router();
 
@@ -12,7 +14,11 @@ const router = express.Router();
 router.post('/register', registerUser);
 router.post('/login', loginUser);
 
-// Protected route: Get current user profile
+// Protected routes
 router.get('/me', authenticateUser, getMe);
+
+// Admin-only routes
+router.get('/', authenticateUser, authorizeRoles('admin'), getAllUsers);
+router.delete('/:id', authenticateUser, authorizeRoles('admin'), deleteUser);
 
 export default router;

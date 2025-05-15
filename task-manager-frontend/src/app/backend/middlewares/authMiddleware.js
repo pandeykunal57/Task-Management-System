@@ -1,5 +1,12 @@
 import jwt from 'jsonwebtoken';
 import User from '../models/User.js';
+import dotenv from 'dotenv';
+
+dotenv.config();
+
+export function verifyToken(token) {
+  return jwt.verify(token, process.env.JWT_SECRET);
+}
 
 /**
  * Middleware to authenticate a user using JWT.
@@ -8,7 +15,6 @@ import User from '../models/User.js';
 export const authenticateUser = async (req, res, next) => {
   const authHeader = req.headers.authorization;
 
-  // Check if Authorization header is present
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
     return res.status(401).json({ message: 'Authorization token missing or malformed' });
   }
@@ -16,10 +22,10 @@ export const authenticateUser = async (req, res, next) => {
   const token = authHeader.split(' ')[1];
 
   try {
-    // Verify JWT token
+    // JWT payload contains userId and role now
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-    // Attach user data to req.user (excluding password)
+    // Find user by decoded.userId
     const user = await User.findById(decoded.userId).select('-password');
     if (!user) {
       return res.status(401).json({ message: 'Invalid user' });
