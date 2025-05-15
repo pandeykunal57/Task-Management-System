@@ -1,6 +1,7 @@
 "use client";
 
 import { createContext, useContext, useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 
 // Create the context
 export const AuthContext = createContext();
@@ -10,6 +11,7 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [token, setToken] = useState(null);  // <-- store token separately
   const [loading, setLoading] = useState(true);
+  const router = useRouter();  // 👈 Add router
 
   // Load user and token from localStorage on first mount
   useEffect(() => {
@@ -24,7 +26,7 @@ export const AuthProvider = ({ children }) => {
     setLoading(false);
   }, []);
 
-  // Updated login function: fetches from API and stores user + token
+  // Login function: fetches from API and stores user + token
   const login = async ({ email, password }) => {
     try {
       const res = await fetch("/api/login", {
@@ -50,13 +52,13 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-
-  // Logout function clears user and token from state and localStorage
+  // Logout function: clears data and redirects
   const logout = () => {
     setUser(null);
     setToken(null);
     localStorage.removeItem("task_user");
     localStorage.removeItem("task_token");
+    router.push("/");  // 👈 Redirect to landing page
   };
 
   return (
@@ -66,8 +68,5 @@ export const AuthProvider = ({ children }) => {
   );
 };
 
-
 // Hook to use the auth context
 export const useAuth = () => useContext(AuthContext);
-
-
