@@ -1,4 +1,5 @@
-// Load necessary packages
+// src/app/backend/index.js
+
 import express from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
@@ -6,45 +7,35 @@ import cors from 'cors';
 // Import custom modules
 import connectDB from './config/db.js';
 import authRoutes from './routes/authRoutes.js';
-import taskRoutes from './routes/task.routes.js'; // ✅ NEW: Task route added
+import taskRoutes from './routes/task.routes.js';
 import auditRoutes from './routes/audit.routes.js';
 import analyticsRoutes from './routes/analytics.routes.js';
-import userRoutes from './routes/user.routes.js'; // ✅ add this
+import userRoutes from './routes/user.routes.js';
 
-
-
-
-
-
-
-dotenv.config(); // Load environment variables from .env
+dotenv.config();
 
 const app = express();
 
-// Connect to MongoDB using Mongoose
+// Connect to MongoDB
 connectDB();
 
-// Apply global middlewares
-app.use(cors());             // Allow requests from frontend domains (like Vercel)
-app.use(express.json());     // Parse JSON request bodies
+// Middleware
+app.use(cors({ origin: '*', credentials: true }));
+app.use(express.json());
 
-// Route definitions
-app.use('/api/auth', authRoutes);   // All authentication routes: /login, /signup
-app.use('/api/tasks', taskRoutes);  // ✅ All task routes: CRUD, filtering, etc.
-
+// Routes
+app.use('/api/auth', authRoutes);
+app.use('/api/tasks', taskRoutes);
 app.use('/api/audit', auditRoutes);
-
 app.use('/api/analytics', analyticsRoutes);
+app.use('/api/users', userRoutes);
 
-app.use('/api/users', userRoutes); // ✅ exposes /api/users, /api/users/:id etc.
-
-
-// Root route (for health check)
+// Health check
 app.get('/', (req, res) => {
   res.send('🚀 API is running...');
 });
 
-// Start Express server
+// Start server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`🚀 Server running on port ${PORT}`);

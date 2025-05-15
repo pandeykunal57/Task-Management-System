@@ -14,6 +14,7 @@ export default function Sidebar() {
     { label: "Add Task", href: "/dashboard/tasks/add" },
     ...(user?.role === "admin"
       ? [
+          { label: "Analytics", href: "/dashboard/analytics" },        
           { label: "Audit Logs", href: "/dashboard/auditlogs" },
           { label: "Manage Users", href: "/dashboard/users" },
         ]

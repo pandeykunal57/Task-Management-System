@@ -1,5 +1,5 @@
 import Task from '../models/task.model.js';
-import User from '../models/user.model.js';
+import User from '../models/User.js';
 
 export const getAnalytics = async (req, res) => {
   try {

@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { useAuth } from '@/app/context/AuthContext';
 import { useRouter } from 'next/navigation';
 import ProtectedRoute from '@/app/components/ProtectedRoute';
-import { Card, CardContent } from '@/components/ui/card';
+import Card from '@/app/components/ui/Card';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 
 export default function AnalyticsPage() {
@@ -62,37 +62,36 @@ export default function AnalyticsPage() {
 
         {analytics && (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-            <Card className="bg-white shadow">
-              <CardContent className="p-4">
+            <Card>
+              <div className="p-4">
                 <h3 className="text-lg font-semibold">Tasks Created</h3>
                 <p className="text-2xl font-bold">{analytics.createdCount}</p>
-              </CardContent>
+              </div>
             </Card>
 
-            <Card className="bg-white shadow">
-              <CardContent className="p-4">
+            <Card>
+              <div className="p-4">
                 <h3 className="text-lg font-semibold">Assigned To You</h3>
                 <p className="text-2xl font-bold">{analytics.assignedCount}</p>
-              </CardContent>
+              </div>
             </Card>
 
-            <Card className="bg-white shadow">
-              <CardContent className="p-4">
+            <Card>
+              <div className="p-4">
                 <h3 className="text-lg font-semibold">Completed</h3>
                 <p className="text-2xl font-bold">{analytics.completedCount}</p>
-              </CardContent>
+              </div>
             </Card>
 
-            <Card className="bg-white shadow">
-              <CardContent className="p-4">
+            <Card>
+              <div className="p-4">
                 <h3 className="text-lg font-semibold">Overdue</h3>
                 <p className="text-2xl font-bold">{analytics.overdueCount}</p>
-              </CardContent>
+              </div>
             </Card>
           </div>
         )}
 
-        {/* Optional chart */}
         {chartData.length > 0 && (
           <div className="bg-white rounded shadow p-4">
             <h2 className="text-xl font-bold mb-4">Overview</h2>

@@ -1,3 +1,5 @@
+// src/app/backend/routes/task.routes.js
+
 import express from 'express';
 import {
   createTask,
@@ -5,44 +7,36 @@ import {
   updateTask,
   deleteTask,
 } from '../controllers/task.controller.js';
-import { authenticateUser } from '../middlewares/authMiddleware.js'; // ✅ Use correct import for authentication
-import { logAction } from '../middlewares/audit.middleware.js'; // ✅ Import the audit log middleware
+import { authenticateUser } from '../middlewares/authMiddleware.js';
+import { logAction } from '../middlewares/audit.middleware.js';
 
 const router = express.Router();
 
-// @route   POST /api/tasks
-// @desc    Create new task
-// @access  Private
+// Create new task
 router.post(
   '/',
-  authenticateUser, // ✅ Authentication middleware
-  createTask, // ✅ Task creation logic
-  logAction('CREATE_TASK', 'User created a new task') // ✅ Log after creation
+  authenticateUser,
+  createTask,
+  logAction('CREATE_TASK', 'User created a new task')
 );
 
-// @route   GET /api/tasks
-// @desc    Get all tasks for the user
-// @access  Private
-router.get('/', authenticateUser, getAllTasks); // ✅ Authentication middleware, no logging needed
+// Get all tasks
+router.get('/', authenticateUser, getAllTasks);
 
-// @route   PUT /api/tasks/:id
-// @desc    Update a task
-// @access  Private
+// Update a task
 router.put(
   '/:id',
-  authenticateUser, // ✅ Authentication middleware
-  updateTask, // ✅ Task update logic
-  logAction('UPDATE_TASK', 'User updated a task') // ✅ Log after update
+  authenticateUser,
+  updateTask,
+  logAction('UPDATE_TASK', 'User updated a task')
 );
 
-// @route   DELETE /api/tasks/:id
-// @desc    Delete a task
-// @access  Private
+// Delete a task
 router.delete(
   '/:id',
-  authenticateUser, // ✅ Authentication middleware
-  deleteTask, // ✅ Task deletion logic
-  logAction('DELETE_TASK', 'User deleted a task') // ✅ Log after deletion
+  authenticateUser,
+  deleteTask,
+  logAction('DELETE_TASK', 'User deleted a task')
 );
 
 export default router;
